@@ -1,5 +1,6 @@
 (ns webshop.core
-  (:require [ring.adapter.jetty :as jetty]))
+  (:require [ring.adapter.jetty :as jetty]
+            [ring.middleware.reload :refer [wrap-reload]]))
 
 (defn handler [request]
   {:status 200
@@ -7,4 +8,5 @@
    :body "Hello EE World"})
 
 (defn -main [& args]
-  (jetty/run-jetty handler {:port 3000}))
+  ; #' means "use the var"
+  (jetty/run-jetty (wrap-reload #'handler) {:port 3000}))
