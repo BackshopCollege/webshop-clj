@@ -2,7 +2,9 @@
   (:require [clojure.test :refer :all]
             [ring.mock.request :as mock]
             [cheshire.core :as json]
-            [webshop.core :as app]))
+            [webshop.core :as app]
+            [webshop.db :as db]
+            ))
 
 (defn- mock-post-request
   [url]
@@ -14,7 +16,7 @@
 
 (defn- mock-db
   [db-mock]
-  (reify IDb
+  (reify db/IDb
     (save [_ row]
       (deliver db-mock row))))
 

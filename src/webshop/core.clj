@@ -2,7 +2,9 @@
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :refer [created]]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [webshop.db :as db]
+            ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; http handler
@@ -15,10 +17,11 @@
       (json/decode true)))
 
 (defn handler
-  [{:keys [shorten]} {:keys [body]}]
+  [{:keys [shorten db]} {:keys [body]}]
   (let [url (-> body parse-body :url)
         resource {:url url
                   :short-url (shorten url)}]
+    (db/save db resource)
     (created "" (json/encode resource))))
 
 (defn new-handler
@@ -30,7 +33,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def handler'
-  (new-handler {:shorten (constantly "short")}))
+  (new-handler
+    {:shorten (constantly "short")
+     :db (reify db/IDb
+           (save [_ resource]
+             (println (str "Saved: " resource))))}))
 
 (defn -main [& args]
   ; #' means "use the var"
