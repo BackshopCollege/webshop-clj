@@ -6,4 +6,8 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [ring "1.6.3"]]
 
-  :profiles {:dev {:dependencies [[ring/ring-devel "1.6.3"]]}})
+  :main webshop.core
+
+  :profiles {:dev {:source-paths ["dev"]
+                   :repl-options {:init-ns user}
+                   :dependencies [[ring/ring-devel "1.6.3"]]}})
