@@ -1,7 +1,23 @@
 (ns webshop.core-test
   (:require [clojure.test :refer :all]
-            [webshop.core :refer :all]))
+            [ring.mock.request :as mock]
+            [webshop.core :as app]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(defn- mock-post-request
+  [url]
+  (-> (mock/request :post (str "/" url))
+      (mock/json-body {:url url})) )
+
+(deftest ^:scenario user-shortens-a-url
+  (let [seed (rand-int 100)
+        shorten-fn #(str % "-" seed)
+        handler (app/new-handler {:shorten shorten-fn}) ]
+
+    (testing "http response"
+      (let [response (handler (mock-post-request "url"))]
+        (is (= (:status response) 201)
+            "status code should be 201 (created)")
+
+        (is (= (-> response :body :short-url)
+               (shorten-fn "url"))
+            "body should have the url shortened" )))))
