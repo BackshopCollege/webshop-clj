@@ -4,7 +4,21 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
-FIXME
+You can run the app with:
+
+```
+lein run
+```
+
+Then visit [http://localhost:3000](http://localhost:3000).
+
+You can run tests with:
+
+```
+lein test-refresh
+```
+
+It will watch for changes on your files and re-run the tests.
 
 ## License
 

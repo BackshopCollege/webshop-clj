@@ -10,4 +10,5 @@
 
   :profiles {:dev {:source-paths ["dev"]
                    :repl-options {:init-ns user}
+                   :plugins  [[com.jakemccrary/lein-test-refresh "0.22.0"]]
                    :dependencies [[ring/ring-devel "1.6.3"]]}})
