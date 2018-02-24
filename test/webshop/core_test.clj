@@ -1,6 +1,7 @@
 (ns webshop.core-test
   (:require [clojure.test :refer :all]
             [ring.mock.request :as mock]
+            [cheshire.core :as json]
             [webshop.core :as app]))
 
 (defn- mock-post-request
@@ -18,6 +19,6 @@
         (is (= (:status response) 201)
             "status code should be 201 (created)")
 
-        (is (= (-> response :body :short-url)
+        (is (= (-> response :body (json/decode true) :short-url)
                (shorten-fn "url"))
             "body should have the url shortened" )))))
