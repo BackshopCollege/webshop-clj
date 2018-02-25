@@ -3,6 +3,7 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :refer [created]]
             [cheshire.core :as json]
+            [compojure.core :refer [routes POST]]
             [webshop.db :as db]
             ))
 
@@ -16,23 +17,24 @@
       slurp
       (json/decode true)))
 
-(defn handler
-  [{:keys [shorten db]} {:keys [body]}]
-  (let [url (-> body parse-body :url)
-        resource {:url url
+(defn- shorten-url
+  [{:keys [shorten db]} url]
+  (let [resource {:url url
                   :short-url (shorten url)}]
     (db/save db resource)
     (created "" (json/encode resource))))
 
 (defn new-handler
-  [app-config]
-  (partial handler app-config))
+  [app]
+  (routes
+    (POST "/url" {body :body}
+          (shorten-url app (:url (parse-body body))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; webserver entrypoint
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def handler'
+(def handler
   (new-handler
     {:shorten (constantly "short")
      :db (reify db/IDb
@@ -41,4 +43,4 @@
 
 (defn -main [& args]
   ; #' means "use the var"
-  (jetty/run-jetty (wrap-reload #'handler') {:port 3000}))
+  (jetty/run-jetty (wrap-reload #'handler) {:port 3000}))
