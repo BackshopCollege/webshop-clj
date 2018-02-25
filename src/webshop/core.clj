@@ -4,6 +4,7 @@
             [ring.util.response :refer [created redirect]]
             [cheshire.core :as json]
             [compojure.core :refer [routes POST GET]]
+            [compojure.route :refer [not-found]]
             [webshop.db :as db]
             ))
 
@@ -34,7 +35,8 @@
     (POST "/url" {body :body}
           (shorten-url app (:url (parse-body body))))
     (GET "/url/:url" {{url :url} :params}
-         (lookup-url app url))))
+         (lookup-url app url))
+    (not-found "Not Found")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; webserver entrypoint

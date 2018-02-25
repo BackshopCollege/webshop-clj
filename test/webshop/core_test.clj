@@ -68,3 +68,17 @@
         (is (= (-> response :headers (get "Location"))
                "http://example.com")
             "Location header should be set with the original url")))))
+
+(deftest ^:scenario route-not-found
+  (let [; subject
+        handler (app/new-handler
+                  {:shorten (fn [& args])
+                   :db {}})]
+
+    (testing "http response"
+      (let [response (handler (mock-get-request "/not-found"))]
+        (is (= (:status response) 404)
+            "status code should be 404 (not found)")
+
+        (is (= (:body response)
+               "Not Found"))))))
