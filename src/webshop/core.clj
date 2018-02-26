@@ -42,15 +42,12 @@
 ;; webserver entrypoint
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(def db-instance (db/new-db))
+
 (def handler
   (new-handler
     {:shorten (constantly "short")
-     :db (reify db/IDb
-           (save [_ resource]
-             (println (str "Saved: " resource)))
-           (lookup [_ resource]
-             (println (str "Found: " resource))
-             "http://example.com"))}))
+     :db db-instance}))
 
 (defn -main [& args]
   ; #' means "use the var"
