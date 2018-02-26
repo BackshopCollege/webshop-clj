@@ -42,11 +42,14 @@
 ;; webserver entrypoint
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(def counter (atom 0))
+
 (def db-instance (db/new-db))
 
 (def handler
   (new-handler
-    {:shorten (constantly "short")
+    {:shorten (fn [_]
+                (str "short-" (swap! counter inc) ))
      :db db-instance}))
 
 (defn -main [& args]
