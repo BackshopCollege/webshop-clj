@@ -6,4 +6,5 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [ring "1.6.3"]]
 
-  :profiles {:dev {:dependencies [[ring/ring-devel "1.6.3"]]}})
+  :profiles {:dev {:dependencies [[ring/ring-devel "1.6.3"]
+  								  [compojure "1.6.0"]]}})
